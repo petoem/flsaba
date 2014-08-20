@@ -39,7 +39,7 @@ $ flsaba -h
 
 Project Name
 ----
-file (without vowels) = *fl*
+file (without vowels) = *fl*  
 サーバー (to Rōmaji) = *Sābā* (english: Server)
 
 --------------------------
