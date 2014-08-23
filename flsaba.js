@@ -2,24 +2,34 @@ var express = require('express');
 var path = require('path');
 var fs = require('fs');
 var filewalker = require('filewalker');
+var pretty = require('prettysize');
 
 var app = express();
 
+app.set('flsabaCssURL', Math.random().toString()); //generate random CSS URL
+
+app.get('/'+ app.get('flsabaCssURL'), function(req, res, next){
+    res.set('Content-Type', 'text/css');
+    res.sendfile(app.get('flsabaCSSpath') || __dirname + '/flsabaUI/flsaba.css');
+});
 
 app.get('/:fdpath(*)', function(req, res, next){
-  var _path = path.join(app.get('flsabaDir'), req.params.fdpath);
+    res.set('Content-Type', 'text/html');
+    var _path = path.join(app.get('flsabaDir'), req.params.fdpath);
     fs.exists(_path, function (exist) {
         if(exist){
             fs.stat(_path, function (err, stats) {
                 if(stats.isFile()){
                     res.download(_path);
                 }else{
+                    res.write('<link rel="stylesheet" href="/' + app.get('flsabaCssURL') + '">');
+                    res.write("<p>" + req.url + '</p>');
                     filewalker(_path, { recursive: false })
                     .on('file', function (p, s, a) {
-                        res.write('<a href="' + p + '">' + p + '</a><br>');
+                        res.write('<p class="file"><a href="' + p + '">' + p + '</a> <span class="pull-right">' + pretty(s.size) + '</span></p>');
                     })
                     .on('dir', function(p) {
-                        res.write('<a href="' +  p + "/" +'">' + p + '</a><br>');
+                        res.write('<p class="directory"><a href="' +  p + "/" +'">' + p + '</a></p>');
                     })
                     .on('error', function(err) {
                         console.log("File error: " + err);

@@ -27,7 +27,8 @@
   "dependencies": {
     "commander": "^2.3.0",
     "express": "~4.2.0",
-    "filewalker": "^0.1.2"
+    "filewalker": "^0.1.2",
+    "prettysize": "0.0.3"
   },
   "license": "MIT",
   "homepage": "https://github.com/petoem/flsaba"
