@@ -38,6 +38,7 @@ app.get('/:fdpath(*)', function(req, res, next){
                     })
                     .on('done', function() {
                         res.write("<p>Files found: " + this.files + '</p>');
+                        res.write('<p id="footer">flSaba ' + require('./package.json').version + '<br><a href="https://github.com/petoem/flsaba">Source Code on Github</a></p>');
                         res.end();
                     })
                     .walk();

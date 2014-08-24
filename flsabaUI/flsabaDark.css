@@ -40,6 +40,16 @@ a:hover{
 	float: right;
 }
 
+#footer{
+	padding-top: 20px;
+	text-align: center;
+	font-size: 14px;
+}
+
+#footer a{
+	color: #696969;
+}
+
 @media(max-width:1400px) {
 	body{
 		margin:4% 15% 0px 15%;
