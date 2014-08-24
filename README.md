@@ -1,8 +1,6 @@
 flSaba
 ======
-**Simple Node.js File-server for folder sharing**
-
-####flSaba is like Apache with Directory listing but fast & simple.
+**Simple expressJS server with Directory Listing**
 
 ## Quick Start
 First you need to install flSaba Globally.
