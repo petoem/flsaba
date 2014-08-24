@@ -10,7 +10,7 @@ app.set('flsabaCssURL', Math.random().toString()); //generate random CSS URL
 
 app.get('/'+ app.get('flsabaCssURL'), function(req, res, next){
     res.set('Content-Type', 'text/css');
-    res.sendfile(app.get('flsabaCSSpath') || __dirname + '/flsabaUI/flsaba.css');
+    res.sendfile(app.get('flsabaCSSpath'));
 });
 
 app.get('/:fdpath(*)', function(req, res, next){
