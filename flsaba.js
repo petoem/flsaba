@@ -3,6 +3,7 @@ var path = require('path');
 var fs = require('fs');
 var filewalker = require('filewalker');
 var pretty = require('prettysize');
+var mime = require('mime');
 
 var app = express();
 
@@ -14,14 +15,15 @@ app.get('/'+ app.get('flsabaCssURL'), function(req, res, next){
 });
 
 app.get('/:fdpath(*)', function(req, res, next){
-    res.set('Content-Type', 'text/html');
     var _path = path.join(app.get('flsabaDir'), req.params.fdpath);
     fs.exists(_path, function (exist) {
         if(exist){
             fs.stat(_path, function (err, stats) {
                 if(stats.isFile()){
-                    res.download(_path);
+                    res.set('Content-Type', mime.lookup(_path));
+                    if(app.get('flsabaForceDL')){res.download(_path);}else{res.sendfile(_path);};
                 }else{
+                    res.set('Content-Type', 'text/html');
                     res.write('<link rel="stylesheet" href="/' + app.get('flsabaCssURL') + '">');
                     res.write("<p>" + req.url + '</p>');
                     filewalker(_path, { recursive: false })
@@ -42,6 +44,7 @@ app.get('/:fdpath(*)', function(req, res, next){
                 }
             });
         }else{
+            res.set('Content-Type', 'text/html');
             res.status(404);
             res.send("Nothing Exists here.");
         }
