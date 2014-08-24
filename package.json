@@ -4,7 +4,7 @@
   "private": false,
   "preferGlobal": "true",
   "author": "Michael Petö <npm@petoe.me>",
-  "description": "Simple Node.js File-server for folder sharing",
+  "description": "Simple expressJS server with Directory Listing",
   "keywords": [
     "file",
     "server",
