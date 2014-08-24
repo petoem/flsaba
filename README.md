@@ -33,6 +33,8 @@ $ flsaba -h
     -V, --version      output the version number
     -p, --port <n>     Port to listen on (default: 3000)
     -d, --dir [value]  Directory to serve files from (default: current working Directory)
+    -s, --style [value]  path to CSS file
+    -f, --forceDL        Set to force Download of file
 ```
 
 Project Name
