@@ -4,18 +4,52 @@ var fs = require('fs');
 var filewalker = require('filewalker');
 var pretty = require('prettysize');
 var mime = require('mime');
+var multer = require('multer');
 
 var app = express();
 
+app.use(multer({dest: './tmp/'}));
+
 app.set('flsabaCssURL', Math.random().toString()); //generate random CSS URL
+app.set('flsabaUploadURL', Math.random().toString()); //generate random Upload URL
+app.set('flsabaDropZoneJS', fs.readFileSync('./lib/dropzone.min.js', {flags: 'r', encoding: 'utf-8'}) + ' ' + fs.readFileSync('./lib/upload.js', {flags: 'r', encoding: 'utf-8'}));
 
 app.get('/'+ app.get('flsabaCssURL'), function(req, res, next){
     res.set('Content-Type', 'text/css');
     res.sendfile(app.get('flsabaCSSpath'));
 });
 
+app.post('/' + app.get('flsabaUploadURL') + '/:uploadDir', function(req, res, next){
+    var uploadToDir = new Buffer(req.params.uploadDir, 'base64').toString('utf-8');
+    var uploadFilename = req.files.uploadedFile.originalname;
+    var tmpfilepath = './tmp/' + req.files.uploadedFile.name;
+
+    var _path = path.join(app.get('flsabaDir'), uploadToDir);
+    fs.exists(_path + uploadFilename, function (exist) {
+        if(!exist){
+            var source = fs.createReadStream(tmpfilepath);
+            var dest = fs.createWriteStream(_path + uploadFilename);
+            source.pipe(dest); // Copy to Destination
+            source.on('end', function() {
+                res.send('OK');
+                fs.unlinkSync(tmpfilepath);
+            });
+            source.on('error', function(err) {
+                console.log(err);
+                fs.unlinkSync(tmpfilepath);
+                res.status(500);
+            });
+        }else{
+            res.status(500);
+            res.send('Error: File Exists');
+            fs.unlinkSync(tmpfilepath);
+        }
+    });
+});
+
 app.get('/:fdpath(*)', function(req, res, next){
     var _path = path.join(app.get('flsabaDir'), req.params.fdpath);
+    var url = req.url;
     fs.exists(_path, function (exist) {
         if(exist){
             fs.stat(_path, function (err, stats) {
@@ -37,8 +71,11 @@ app.get('/:fdpath(*)', function(req, res, next){
                         console.log("File error: " + err);
                     })
                     .on('done', function() {
-                        res.write("<p>Files found: " + this.files + '</p>');
+                        res.write("<p>Files found: " + this.files + ' <a id="btnUpload">Upload</a> <span id="progValue"></span></p>');
                         res.write('<p id="footer">flSaba ' + require('./package.json').version + '<br><a href="https://github.com/petoem/flsaba">Source Code on Github</a></p>');
+                        //res.write('<div class="uploadContainer"><h2 id="progValue"></h2><progress value="" max="100" id="progressBar"></progress></div>');
+                        var dropzoneJSCode = app.get('flsabaDropZoneJS').replace('#{uploadDIRPlaceHolder}', '/' + app.get('flsabaUploadURL') + '/' + new Buffer(url).toString('base64'));
+                        res.write('<script type="text/javascript">' + dropzoneJSCode + '</script>');
                         res.end();
                     })
                     .walk();
