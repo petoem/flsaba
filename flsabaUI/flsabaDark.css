@@ -61,3 +61,38 @@ a:hover{
 		margin:3% 10% 0px 10%;
 	}
 }
+
+/* Progressbar Style */
+
+progress {
+  -webkit-appearance: none;
+  appearance:         none;
+  height:             7px;
+  width:              100%;
+  opacity: 0;
+  z-index:-1;
+  position: 			   absolute;
+	left: 				     50%;
+	top: 				      0px;
+	-webkit-transform:  translate(-50%, -50%);
+	-moz-transform:     translate(-50%, -50%);
+	-ms-transform:      translate(-50%, -50%);
+	-o-transform:       translate(-50%, -50%);
+	transform: 			  translate(-50%, -50%);
+}
+
+progress::-webkit-progress-bar {
+  background:          #C7C7CC;
+}
+
+progress::-webkit-progress-value {
+  background:         #007AFF;
+   -webkit-transition: all .25s ease-in-out;
+  -moz-transition: all .25s ease-in-out;
+  -o-transition: all .25s ease-in-out;
+  transition: all .25s ease-in-out;
+
+-webkit-box-shadow: 0px 4px 20px 1px rgba(255,0,255,0.4);
+-moz-box-shadow: 0px 4px 20px 1px rgba(255,0,255,0.4);
+box-shadow: 0px 4px 20px 1px rgba(255,0,255,0.4);
+}
