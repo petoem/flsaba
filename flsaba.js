@@ -71,9 +71,9 @@ app.get('/:fdpath(*)', function(req, res, next){
                         console.log("File error: " + err);
                     })
                     .on('done', function() {
-                        res.write("<p>Files found: " + this.files + ' <a id="btnUpload">Upload</a> <span id="progValue"></span></p>');
+                        res.write("<p>Files found: " + this.files + ' <a id="btnUpload" class="pull-right">Upload</a> <span id="progValue" class="pull-right"></span></p>');
                         res.write('<p id="footer">flSaba ' + require('./package.json').version + '<br><a href="https://github.com/petoem/flsaba">Source Code on Github</a></p>');
-                        //res.write('<div class="uploadContainer"><h2 id="progValue"></h2><progress value="" max="100" id="progressBar"></progress></div>');
+                        res.write('<progress value="" max="100" id="progressBar"></progress>');
                         var dropzoneJSCode = app.get('flsabaDropZoneJS').replace('#{uploadDIRPlaceHolder}', '/' + app.get('flsabaUploadURL') + '/' + new Buffer(url).toString('base64'));
                         res.write('<script type="text/javascript">' + dropzoneJSCode + '</script>');
                         res.end();
