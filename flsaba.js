@@ -5,14 +5,19 @@ var filewalker = require('filewalker');
 var pretty = require('prettysize');
 var mime = require('mime');
 var multer = require('multer');
+var bodyParser = require('body-parser');
 
 var app = express();
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(multer({dest: './tmp/'}));
 
 app.set('flsabaCssURL', Math.random().toString()); //generate random CSS URL
 app.set('flsabaUploadURL', Math.random().toString()); //generate random Upload URL
+app.set('flsabaMkDirURL', Math.random().toString()); //generate random MKDIR URL
 app.set('flsabaDropZoneJS', fs.readFileSync('./lib/dropzone.min.js', {flags: 'r', encoding: 'utf-8'}) + ' ' + fs.readFileSync('./lib/upload.js', {flags: 'r', encoding: 'utf-8'}));
+app.set('flsabaMkDirJS', fs.readFileSync('./lib/mkdir.js', {flags: 'r', encoding: 'utf-8'}));
 
 app.get('/'+ app.get('flsabaCssURL'), function(req, res, next){
     res.set('Content-Type', 'text/css');
@@ -47,6 +52,23 @@ app.post('/' + app.get('flsabaUploadURL') + '/:uploadDir', function(req, res, ne
     });
 });
 
+app.post('/' + app.get('flsabaMkDirURL') + '/:mkDirIN', function(req, res, next){
+    var _path = path.join(app.get('flsabaDir'), new Buffer(req.params.mkDirIN, 'base64').toString('utf-8'));
+    var nFN = req.param('newFolderName');
+
+    fs.exists(_path + nFN, function (exist) {
+        if(!exist){
+            fs.mkdir(_path + nFN, function (err) {
+                if(err){
+                    console.log(err);
+                    res.status(500);
+                }
+                res.status(200);
+            });
+        }
+    });
+});
+
 app.get('/:fdpath(*)', function(req, res, next){
     var _path = path.join(app.get('flsabaDir'), req.params.fdpath);
     var url = req.url;
@@ -71,11 +93,12 @@ app.get('/:fdpath(*)', function(req, res, next){
                         console.log("File error: " + err);
                     })
                     .on('done', function() {
-                        res.write("<p>Files found: " + this.files + ' <a id="btnUpload" class="pull-right">Upload</a> <span id="progValue" class="pull-right"></span></p>');
+                        res.write("<p>Files found: " + this.files + ' <a id="btnMkDir" class="pull-right"> New Folder </a> <a class="pull-right"> &vert; </a> <a id="btnUpload" class="pull-right"> Upload </a> <span id="progValue" class="pull-right"></span></p>');
                         res.write('<p id="footer">flSaba ' + require('./package.json').version + '<br><a href="https://github.com/petoem/flsaba">Source Code on Github</a></p>');
                         res.write('<progress value="" max="100" id="progressBar"></progress>');
-                        var dropzoneJSCode = app.get('flsabaDropZoneJS').replace('#{uploadDIRPlaceHolder}', '/' + app.get('flsabaUploadURL') + '/' + new Buffer(url).toString('base64'));
-                        res.write('<script type="text/javascript">' + dropzoneJSCode + '</script>');
+                        var JSClientCode = app.get('flsabaDropZoneJS').replace('#{uploadDIRPlaceHolder}', '/' + app.get('flsabaUploadURL') + '/' + new Buffer(url).toString('base64'));
+                        JSClientCode += app.get('flsabaMkDirJS').replace('#{mkDIRPlaceHolder}', '/' + app.get('flsabaMkDirURL') + '/' + new Buffer(url).toString('base64'));
+                        res.write('<script type="text/javascript">' + JSClientCode + '</script>');
                         res.end();
                     })
                     .walk();
