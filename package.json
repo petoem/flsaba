@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "aupr": "0.0.2",
+    "body-parser": "^1.9.2",
     "commander": "^2.3.0",
     "express": "~4.2.0",
     "filewalker": "^0.1.2",
