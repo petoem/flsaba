@@ -1,9 +1,9 @@
 flSaba
 ======
-**Simple expressJS server with Directory Listing**
+**simple http server with directory listing**
 
 ## Quick Start
-First you need to install flSaba Globally.
+First, you need to install flsaba globally.
 
 ```sh
 $ npm install -g flsaba
@@ -19,7 +19,7 @@ cd into the directory to serve files from and do:
 ```sh
 $ flsaba
 ```
-Now point your Browser to &lt;ip&gt;:&lt;port&gt; (in this case: localhost:3000) and you will see your Directorys content.
+Now point your Browser to &lt;ip&gt;:&lt;port&gt; (in this case: localhost:3000) and you will see your directories content.
 
 ####*Help*
 ```sh
@@ -29,12 +29,14 @@ $ flsaba -h
 
   Options:
 
-    -h, --help         output usage information
-    -V, --version      output the version number
-    -p, --port <n>     Port to listen on (default: 3000)
-    -d, --dir [value]  Directory to serve files from (default: current working Directory)
+    -h, --help           output usage information
+    -V, --version        output the version number
+    -p, --port <n>       port to listen on (default: 3000)
+    -d, --dir [value]    directory to serve files from (default: current working directory)
     -s, --style [value]  path to CSS file
-    -f, --forceDL        Set to force Download of file
+    -f, --forcedl        set to force download of file
+    -b, --background     start flsaba as a background process
+
 ```
 
 Project Name

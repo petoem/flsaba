@@ -1,0 +1,40 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var fs = require('fs');
+var path = require('path');
+var flsaba = require('../server.js');
+
+program
+  .version(require('../package.json').version)
+  .option('-p, --port <n>', 'port to listen on (default: 3000)', parseInt)
+  .option('-d, --dir [value]', 'directory to serve files from (default: current working directory)')
+  .option('-s, --style [value]', 'path to CSS file')
+  .option('-f, --forcedl', 'set to force download of file')
+  .option('-b, --background', 'start ' + require('../package.json').name + ' as a background process')
+  .option('-a, --auth [value]', '"username:password:rights" for multiple users separate with comma')
+  .parse(process.argv);
+
+if(program.background){
+  var err = fs.openSync(path.join(process.cwd(), 'flsaba_error.log'), 'a');
+  var child = require('child_process').spawn(process.argv[1], process.argv.splice(2).filter((argf) => { return (argf != '-b' && argf != '--background')}), {detached: true, stdio: ['ignore', 'ignore', err]});
+  child.unref();
+  console.log('PID ' + child.pid);
+  process.exit(0);
+}
+
+flsaba.settings.set('port', program.port || 3000);
+flsaba.settings.set('dir', program.dir || process.cwd());
+flsaba.settings.set('template_css', program.style || path.resolve(__dirname, '../template/style.css'));
+flsaba.settings.set('forcedl', program.forcedl || false);
+flsaba.settings.set('authdata', program.auth || false);
+
+flsaba.template.set('program_version', require('../package.json').version);
+flsaba.template.set('template_html', fs.readFileSync(path.resolve(__dirname, '../template/listing.html'), {encoding:'utf8'}));
+flsaba.template.set('template_js', fs.readFileSync(path.resolve(__dirname, '../template/script.js'), {encoding:'utf8'}));
+flsaba.template.set('template_css', fs.readFileSync(flsaba.settings.get('template_css'), {encoding:'utf8'}));
+
+var server = flsaba.listen(flsaba.settings.get('port'), () => {
+  console.log(require('../package.json').name + ' v' + require('../package.json').version + ' server listening on port ' + server.address().port);
+  console.log('Directory: ' + flsaba.settings.get('dir'));
+});
