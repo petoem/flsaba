@@ -2,6 +2,11 @@ flSaba
 ======
 **simple http server with directory listing**
 
+[![GitHub release](https://img.shields.io/github/release/petoem/flsaba.svg?style=flat-square)](https://github.com/petoem/flsaba/releases)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/petoem/flsaba/blob/master/LICENSE)  
+
+[![NPM](https://nodei.co/npm/flsaba.png?downloads=true)](https://www.npmjs.com/package/flsaba)
+
 ## Quick Start
 First, you need to install flsaba globally.
 
@@ -12,7 +17,7 @@ $ npm install -g flsaba
 Basic usage
 -----------
 
-####*Global*
+#### *Global*
 
 cd into the directory to serve files from and do:
 
@@ -21,7 +26,7 @@ $ flsaba
 ```
 Now point your Browser to &lt;ip&gt;:&lt;port&gt; (in this case: localhost:3000) and you will see your directories content.
 
-####*Help*
+#### *Help*
 ```sh
 $ flsaba -h
 
