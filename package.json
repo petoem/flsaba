@@ -2,7 +2,7 @@
   "name": "flsaba",
   "version": "1.0.0",
   "private": false,
-  "preferGlobal": "true",
+  "preferGlobal": true,
   "author": "Michael Petö <npm@petoe.me>",
   "description": "simple http server with directory listing",
   "keywords": [
@@ -26,8 +26,8 @@
   },
   "dependencies": {
     "commander": "^2.9.0",
-    "mime-types": "^2.1.11",
-    "prettysize": "0.0.3"
+    "mime-types": "^2.1.15",
+    "prettysize": "^0.0.3"
   },
   "license": "MIT",
   "homepage": "https://github.com/petoem/flsaba"
